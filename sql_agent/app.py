@@ -1,10 +1,60 @@
 import streamlit as st
-
+import sqlite3
 from utils.llm import generate_sql
 from utils.db import run_query, get_schema
 from utils.validator import validate_query
 from utils.charts import create_chart
+#-------------------------------------------
+# Function to create database and insert data
+#-------------------------------------------
+def create_database():
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
 
+    # Create table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS sales (
+        id INTEGER PRIMARY KEY,
+        customer TEXT,
+        product TEXT,
+        amount REAL,
+        city TEXT,
+        order_date TEXT
+    )
+    """)
+
+    # Sample data
+    data = [
+        ("Akshay", "Laptop", 80000, "Pune", "2026-05-01"),
+        ("Rahul", "Mouse", 500, "Mumbai", "2026-05-02"),
+        ("Sneha", "Keyboard", 2000, "Delhi", "2026-05-03"),
+        ("Akshay", "Monitor", 15000, "Pune", "2026-05-04"),
+    ]
+
+    # Insert data
+    cursor.executemany("""
+    INSERT INTO sales (
+        customer,
+        product,
+        amount,
+        city,
+        order_date
+    )
+    VALUES (?, ?, ?, ?, ?)
+    """, data)
+
+    conn.commit()
+    conn.close()
+
+
+# Streamlit UI
+st.title("SQLite Database Creator")
+
+st.write("Click the button below to create the database and insert sample data.")
+
+if st.button("Create Database"):
+    create_database()
+    st.success("Database Created Successfully!")
 # --------------------------------
 # Page Config
 # --------------------------------
