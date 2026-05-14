@@ -5,7 +5,7 @@ from utils.db import run_query, get_schema
 from utils.validator import validate_query
 from utils.charts import create_chart
 #-------------------------------------------
-# Function to create database and insert data
+# Function to create database and insert data to show it
 #-------------------------------------------
 def create_database():
     conn = sqlite3.connect("database.db")
